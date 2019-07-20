@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Resource;
 
+import com.zy.cache.aspect.executor.RedisCacheExecutor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -40,7 +41,7 @@ public class CacheLzmAspect {
      * @return
      * @throws Throwable
      */
-    @Around("@annotation(com.youzan.ad.cps.biz.aop.lzm.annotation.CacheLzm)")
+    @Around("@annotation(com.zy.cache.aspect.annotation.ZyCache)")
     public Object around(JoinPoint joinPoint) throws Throwable {
         //获取目标方法
         Method method = ((MethodSignature)joinPoint.getSignature()).getMethod();

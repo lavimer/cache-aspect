@@ -8,5 +8,194 @@
     <artifactId>cache-aspect</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!--<spring.version>3.2.17.RELEASE</spring.version>-->
+        <spring.version>4.2.6.RELEASE</spring.version>
+        <mybatis.version>3.2.8</mybatis.version>
+        <mybatis-spring.version>1.3.0</mybatis-spring.version>
+        <mybatis.paginator.version>1.2.15</mybatis.paginator.version>
+        <pagehelper.version>3.4.2</pagehelper.version>
+        <druid.version>1.0.20</druid.version>
+        <mysql.version>5.1.38</mysql.version>
+        <fastjson.version>1.2.28</fastjson.version>
+        <shiro.version>1.2.3</shiro.version>
+        <quartz.version>1.8.4</quartz.version>
+        <slf4j_version>1.7.21</slf4j_version>
+        <log4j_version>1.2.17</log4j_version>
+        <cglib.version>3.2.2</cglib.version>
+        <aspectjrt.version>1.5.4</aspectjrt.version>
+        <aspectjweaver.version>1.8.9</aspectjweaver.version>
+        <lombok.version>1.16.10</lombok.version>
+        <jstl.version>1.2</jstl.version>
+        <servlet_version>3.1.0</servlet_version>
+        <servlet-api.version>2.5</servlet-api.version>
+        <jsp-api.version>2.0</jsp-api.version>
+        <javaee-api.version>7.0</javaee-api.version>
+        <commons-lang.version>2.6</commons-lang.version>
+        <commons-io.version>2.5</commons-io.version>
+        <commons-net.version>3.3</commons-net.version>
+        <commons-fileupload.version>1.3.1</commons-fileupload.version>
+        <xstream_version>1.4.1</xstream_version>
+        <jsoup.version>1.7.2</jsoup.version>
+        <jdom.version>2.0.2</jdom.version>
+        <junit.version>4.10</junit.version>
+        <commons.codec.version>1.10</commons.codec.version>
+        <jaxen.version>1.1.6</jaxen.version>
+        <dom4j.version>1.6.1</dom4j.version>
+        <dubbo.version>2.5.3</dubbo.version>
+        <zookeeper.version>3.4.6</zookeeper.version>
+        <curator_version>2.5.0</curator_version>
+        <zkclient.version>0.4</zkclient.version>
+        <commons.httpclient.version>3.1</commons.httpclient.version>
+        <sigar.version>1.6.4</sigar.version>
+        <jackson_version>2.8.6</jackson_version>
+        <jackson.version>2.8.6</jackson.version>
+        <activemq.version>5.7.0</activemq.version>
+        <javax.jms.version>1.1</javax.jms.version>
+        <org-apache-batik-all.version>1.7-201002241055</org-apache-batik-all.version>
+        <itextpdf.version>5.5.1</itextpdf.version>
+        <jedis.version>2.9.0</jedis.version>
+        <!--<spring.data.commons.version>1.8.1.RELEASE</spring.data.commons.version>-->
+        <spring.data.commons.version>1.13.6.RELEASE</spring.data.commons.version>
+        <spring.redis.version>1.8.1.RELEASE</spring.redis.version>
+        <solrj.version>4.10.3</solrj.version>
+        <bcprov-jdk15on.version>1.47</bcprov-jdk15on.version>
+        <xml-apis.version>1.4.01</xml-apis.version>
+        <json-lib.version>2.1</json-lib.version>
+        <poi.version>3.9</poi.version>
+        <poi.ooxml.version>3.9</poi.ooxml.version>
+        <xmlbeans.version>2.4.0</xmlbeans.version>
+        <joda-time.version>2.5</joda-time.version>
+        <zxing.version>3.2.0</zxing.version>
+        <es.version>5.6.8</es.version>
+        <es.sg.version>5.6.8-19.1</es.sg.version>
+        <es.sg.ssl.version>5.6.8-23</es.sg.ssl.version>
+
+        <mongodb-data.version>1.4.2.RELEASE</mongodb-data.version>
+        <mongodb-driver.version>2.14.2</mongodb-driver.version>
+        <rocketmq.version>3.2.6</rocketmq.version>
+    </properties>
+
+
+    <dependencies>
+        <!-- Spring libs Begin -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-expression</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-instrument</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-instrument-tomcat</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jms</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-oxm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc-portlet</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <!-- Spring libs end -->
+
+
+        <!-- Spring aop libs Begin -->
+        <dependency>
+            <groupId>aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${aspectjrt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectjweaver.version}</version>
+        </dependency>
+        <!-- Spring aop libs End -->
+
+        <!--lombok-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
 </project>
