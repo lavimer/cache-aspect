@@ -1,28 +1,32 @@
 package com.zy.cache.aspect;
 
-import com.youzan.ad.cps.biz.aop.lzm.annotation.CacheKey;
-import com.youzan.ad.cps.biz.aop.lzm.annotation.CacheLzm;
-import com.youzan.ad.cps.biz.aop.lzm.executor.RedisCacheExecutor;
-import com.youzan.bigdata.util.BeanUtils;
-import com.youzan.bigdata.util.LogUtils;
-
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Resource;
-
+import com.zy.cache.aspect.annotation.CacheKeyPart;
+import com.zy.cache.aspect.annotation.ZyCache;
 import com.zy.cache.aspect.executor.RedisCacheExecutor;
+import com.zy.cache.aspect.utils.BeanUtils;
+import com.zy.cache.aspect.utils.LogUtils;
+import java.lang.reflect.Parameter;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
-
 import lombok.extern.slf4j.Slf4j;
 
+
+/** 
+ * @Description:缓存拦截切面
+ * 类修改说明：无
+ *
+ * @author liaozhongmin
+ * @date 2019/7/20 7:50 PM 
+ * @version V1.0 
+ */
 @Component
 @Aspect
 @Slf4j
@@ -48,19 +52,17 @@ public class CacheLzmAspect {
         Method targetMethod = BeanUtils.getTargetMethod(method, joinPoint.getTarget());
 
         //校验是否需要 设置并发锁
-        CacheLzm cacheLzm = targetMethod.getAnnotation(CacheLzm.class);
+        ZyCache zyCache = targetMethod.getAnnotation(ZyCache.class);
         MainProcessor mainProcessor = () -> {
             Object result = ((ProceedingJoinPoint) joinPoint).proceed();
             return result;
         };
 
         Object result;
-        boolean needCache = cacheLzm != null;
-        LogUtils.info(log, "是否需要缓存处理!", "needCache", needCache, "method", BeanUtils.toString(targetMethod));
-
+        boolean needCache = zyCache != null;
         if(needCache){
             //创建
-            result = this.executeCreator(cacheLzm, targetMethod, mainProcessor,joinPoint.getArgs());
+            result = this.executeCreator(zyCache, targetMethod, mainProcessor,joinPoint.getArgs());
         }else{
             //未走缓存所以直接调用
             result = mainProcessor.process();
@@ -69,21 +71,21 @@ public class CacheLzmAspect {
         return result;
     }
 
-    protected Object executeCreator(CacheLzm cacheLzm, Method targetMethod, MainProcessor mainProcessor,Object[] args) throws Throwable {
+    protected Object executeCreator(ZyCache zyCache, Method targetMethod, MainProcessor mainProcessor,Object[] args) throws Throwable {
         CacheProcess cacheProcess = null;
         String cacheKey = null;
 
         Long expire = 0L;
         try{
             //缓存失效时间
-            expire = cacheLzm.expire();
+            expire = zyCache.expire();
             //获取返回类型
             Type type = targetMethod.getGenericReturnType();
             //获取缓存key
-            cacheKey = generateKey(cacheLzm,targetMethod,args);
+            cacheKey = generateKey(zyCache,targetMethod,args);
 
             //工厂 创建缓存执行器
-            cacheProcess = new CacheProcess(redisCacheExecutor,cacheKey, expire, cacheLzm.timeType(),type,mainProcessor);
+            cacheProcess = new CacheProcess(redisCacheExecutor,cacheKey, expire, zyCache.timeType(),type,mainProcessor);
         }catch (Exception e){
             //由于缓存处理的参数转换可能出错,所以捕获 使不影响主流程
             LogUtils.warn(log,"尝试走缓存框架时出错!", e, "cacheKey", cacheKey, "expire", expire);
@@ -103,46 +105,26 @@ public class CacheLzmAspect {
     /**
      * 生成缓存的Key
      *
-     * @param cacheLzm 缓存注解
+     * @param zyCache 缓存注解
      * @param targetMethod 目标方法
      * @param args 参数值
      * @return 返回完整的key值
      * @author liaozhongmin
      * @date  2019/7/19 2:05 PM
      */
-    protected String generateKey(CacheLzm cacheLzm,Method targetMethod,Object[] args){
+    protected String generateKey(ZyCache zyCache,Method targetMethod,Object[] args){
         Parameter[] parameters = targetMethod.getParameters();
-        Map<String, Object> paramValueMap = this.getParamValueMap(parameters, args);
+        Map<String, Object> paramValueMap = BeanUtils.getParamValueMap(parameters, args);
 
         String cacheKeyStr = "";
         for (Parameter parameter : parameters) {
-            CacheKey annotation = parameter.getAnnotation(CacheKey.class);
+            CacheKeyPart annotation = parameter.getAnnotation(CacheKeyPart.class);
             if (annotation != null){
-                cacheKeyStr += paramValueMap.get(parameter.getName()) + cacheLzm.delimiter();
+                cacheKeyStr += paramValueMap.get(parameter.getName()) + zyCache.delimiter();
             }
         }
         cacheKeyStr = cacheKeyStr.substring(0,cacheKeyStr.length()-1);
-        return cacheLzm.key() + cacheKeyStr;
+        return zyCache.keyPrefix() + cacheKeyStr;
     }
 
-
-
-    /**
-     * 获取方法中参数名和对应的值
-     *
-     * @param parameters 参数名列表
-     * @param args 参数值列表
-     * @return 返回参数名对应的值，Map集合
-     * @author liaozhongmin
-     * @date  2019/7/19 2:07 PM
-     */
-    private Map<String,Object> getParamValueMap(Parameter[] parameters,Object[] args){
-
-        Map<String,Object> paramValueMap = new HashMap<>();
-        int length = parameters.length;
-        for (int i=0;i<length;i++) {
-            paramValueMap.put(parameters[i].getName(),args[i]);
-        }
-        return paramValueMap;
-    }
 }
